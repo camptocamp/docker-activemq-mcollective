@@ -14,7 +14,7 @@ RUN cp /usr/share/doc/activemq/examples/conf/credentials.properties /etc/activem
   && ln -s /etc/activemq/instances-available/main /etc/activemq/instances-enabled/main
 
 RUN mkdir /var/run/activemq/ \
-  && chown activemq /var/run/activemq/
+  && chown activemq /var/run/activemq/ /var/lib/activemq/data
 
 RUN apt-get update \
   && apt-get install -y net-tools \
