@@ -6,24 +6,25 @@
   http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
   http://activemq.apache.org/camel/schema/spring http://activemq.apache.org/camel/schema/spring/camel-spring.xsd">
 
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <value>file:${activemq.base}/conf/credentials.properties</value>
-        </property>
-    </bean>
+    <!-- Allows us to use system properties as variables in this configuration file -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
 
-    <!--
-      For more information about what MCollective requires in this file,
-      see https://docs.puppetlabs.com/mcollective/deploy/middleware/activemq.html
-    -->
+    <broker xmlns="http://activemq.apache.org/schema/core"
+            useJmx="false"
+            brokerName="localhost"
+            dataDirectory="${activemq.base}/data">
 
-    <!--
-      WARNING: The elements that are direct children of <broker> MUST BE IN
-      ALPHABETICAL ORDER. This is fixed in ActiveMQ 5.6.0, but affects
-      previous versions back to 5.4.
-      https://issues.apache.org/jira/browse/AMQ-3570
-    -->
-    <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" useJmx="true" schedulePeriodForDestinationPurge="60000">
+        <!--
+            Configure message persistence for the broker. The default persistence
+            mechanism is the KahaDB store (identified by the kahaDB tag).
+            For more information, see:
+
+            http://activemq.apache.org/persistence.html
+        -->
+        <persistenceAdapter>
+            <kahaDB directory="${activemq.base}/data/kahadb"/>
+        </persistenceAdapter>
+
         <!--
           MCollective generally expects producer flow control to be turned off.
           It will also generate a limitless number of single-use reply queues,
@@ -111,12 +112,10 @@
         </systemUsage>
 
         <!--
-          The transport connectors allow ActiveMQ to listen for connections over
-          a given protocol. MCollective uses Stomp, and other ActiveMQ brokers
-          use OpenWire. You'll need different URLs depending on whether you are
-          using TLS. For more information, see:
+            The transport connectors expose ActiveMQ over a given protocol to
+            clients and other brokers. For more information, see:
 
-          https://docs.puppetlabs.com/mcollective/deploy/middleware/activemq.html#transport-connectors
+            http://activemq.apache.org/configuring-transports.html
         -->
         <transportConnectors>
             <transportConnector name="openwire" uri="tcp://0.0.0.0:61616"/>
@@ -125,13 +124,7 @@
               <transportConnector name="stomp+ssl" uri="stomp+ssl://0.0.0.0:61614?needClientAuth=true&amp;transport.enabledProtocols=TLSv1,TLSv1.1,TLSv1.2"/>
             -->
         </transportConnectors>
+
     </broker>
 
-    <!--
-      Enable web consoles, REST and Ajax APIs and demos.
-      It also includes Camel (with its web console); see ${ACTIVEMQ_HOME}/conf/camel.xml for more info.
-
-      See ${ACTIVEMQ_HOME}/conf/jetty.xml for more details.
-    -->
-    <import resource="jetty.xml"/>
 </beans>
