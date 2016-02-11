@@ -79,6 +79,7 @@
                   </pendingQueuePolicy>
                   -->
                 </policyEntry>
+                <policyEntry queue="*.reply.>" gcInactiveDestinations="true" inactiveTimoutBeforeGC="300000" />
               </policyEntries>
             </policyMap>
         </destinationPolicy>
