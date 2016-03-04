@@ -2,8 +2,11 @@
 
 if getent hosts rancher-metadata > /dev/null ; then
   PATH=/opt/puppetlabs/bin:$PATH
+  confdir=$(puppet config print confdir)
+
   # Generate csr_attributes.yaml
-  cat << EOF > $(puppet config print confdir)/csr_attributes.yaml
+  mkdir -p "${confdir}"
+  cat << EOF > ${confdir}/csr_attributes.yaml
 ---
 custom_attributes:
   1.2.840.113549.1.9.7: '$(curl http://rancher-metadata/latest/self/service/name 2> /dev/null):$(curl http://rancher-metadata/latest/self/service/uuid 2> /dev/null)'
