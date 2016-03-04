@@ -1,8 +1,9 @@
 #!/bin/bash
 
 if getent hosts rancher-metadata > /dev/null ; then
+  PATH=/opt/puppetlabs/bin:$PATH
   # Generate csr_attributes.yaml
-  cat << EOF > /etc/puppetlabs/puppet/csr_attributes.yaml
+  cat << EOF > $(puppet config print confdir)/csr_attributes.yaml
 ---
 custom_attributes:
   1.2.840.113549.1.9.7: '$(curl http://rancher-metadata/latest/self/service/name 2> /dev/null):$(curl http://rancher-metadata/latest/self/service/uuid 2> /dev/null)'
@@ -12,9 +13,9 @@ EOF
   rc=1
   while test $rc -ne 0; do
     if getent hosts puppetca > /dev/null; then
-      /opt/puppetlabs/bin/puppet agent -t --noop --server puppetca
+      puppet agent -t --noop --server puppetca
     else
-      /opt/puppetlabs/bin/puppet agent -t --noop
+      puppet agent -t --noop
     fi
     rc=$?
   done
