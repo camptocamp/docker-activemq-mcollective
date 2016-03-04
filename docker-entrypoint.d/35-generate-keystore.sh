@@ -9,4 +9,5 @@ cat ~/.puppetlabs/etc/puppet/ssl/private_keys/${certname}.pem ~/.puppetlabs/etc/
 openssl pkcs12 -export -in /tmp/temp.pem -out /tmp/activemq.p12 -name ${certname} -password pass:secret
 
 # Create keystore
+mkdir -p /var/lib/activemq/main
 keytool -importkeystore -destkeystore /var/lib/activemq/main/keystore.jks -srckeystore /tmp/activemq.p12 -srcstoretype PKCS12 -alias ${certname} -deststorepass secret -srcstorepass secret
