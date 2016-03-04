@@ -22,6 +22,10 @@ RUN apt-get update \
 
 USER activemq
 
+# Configure entrypoint
+COPY /docker-entrypoint.sh /
+COPY /docker-entrypoint.d/* /docker-entrypoint.d/
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["/usr/bin/java", "-Xms512M", "-Xmx512M", \
   "-Dorg.apache.activemq.UseDedicatedTaskRunner=true", \
   "-Dcom.sun.management.jmxremote", \
