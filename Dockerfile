@@ -25,7 +25,8 @@ RUN apt-get update \
 COPY activemq.xml /etc/activemq/instances-available/main/activemq.xml
 
 RUN cp /usr/share/doc/activemq/examples/conf/credentials.properties /etc/activemq/instances-available/main/ \
-  && ln -s /etc/activemq/instances-available/main /etc/activemq/instances-enabled/main
+  && ln -s /etc/activemq/instances-available/main /etc/activemq/instances-enabled/main \
+  && ln -s /var/lib/activemq/main/keystore.jks /etc/activemq/instances-available/main
 
 RUN mkdir /var/run/activemq/ \
   && chown activemq /var/run/activemq/ /var/lib/activemq/data
