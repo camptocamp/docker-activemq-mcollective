@@ -4,6 +4,20 @@ MAINTAINER mickael.canevet@camptocamp.com
 
 EXPOSE 61613 61616
 
+# Install puppet-agent
+ENV RELEASE jessie
+RUN apt-get update \
+  && apt-get install -y curl locales-all \
+  && curl -O http://apt.puppetlabs.com/puppetlabs-release-pc1-${RELEASE}.deb \
+  && dpkg -i puppetlabs-release-pc1-${RELEASE}.deb \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV PUPPET_AGENT_VERSION 1.3.5-1${RELEASE}
+RUN apt-get update \
+  && apt-get install -y puppet-agent=$PUPPET_AGENT_VERSION \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install activemq
 RUN apt-get update \
   && apt-get install -y activemq locales-all \
   && rm -rf /var/lib/apt/lists/*

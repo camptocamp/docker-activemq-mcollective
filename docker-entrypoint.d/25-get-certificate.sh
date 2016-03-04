@@ -12,9 +12,9 @@ EOF
   rc=1
   while test $rc -ne 0; do
     if getent hosts puppetca > /dev/null; then
-      puppet agent -t --noop --server puppetca
+      /opt/puppetlabs/bin/puppet agent -t --noop --server puppetca
     else
-      puppet agent -t --noop
+      /opt/puppetlabs/bin/puppet agent -t --noop
     fi
     rc=$?
   done
