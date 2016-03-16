@@ -2,7 +2,7 @@ FROM debian:jessie
 
 MAINTAINER mickael.canevet@camptocamp.com
 
-EXPOSE 61613 61616
+EXPOSE 61613 61614 61616
 
 # Install puppet-agent
 ENV RELEASE jessie
