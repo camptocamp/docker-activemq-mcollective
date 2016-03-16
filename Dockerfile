@@ -21,7 +21,7 @@ RUN apt-get update \
 
 # Install activemq
 RUN apt-get update \
-  && apt-get install -y activemq locales-all \
+  && apt-get install -y activemq locales-all pwgen \
   && rm -rf /var/lib/apt/lists/*
 
 COPY activemq.xml /etc/activemq/instances-available/main/activemq.xml
