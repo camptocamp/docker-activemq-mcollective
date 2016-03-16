@@ -4,6 +4,8 @@ MAINTAINER mickael.canevet@camptocamp.com
 
 EXPOSE 61613 61614 61616
 
+ENV MCOLLECTIVE_PASSWORD marionette
+
 # Install puppet-agent
 ENV RELEASE jessie
 RUN apt-get update \
@@ -23,6 +25,8 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 COPY activemq.xml /etc/activemq/instances-available/main/activemq.xml
+RUN chown activemq.activemq /etc/activemq/instances-available/main/activemq.xml \
+  /etc/activemq/instances-available/main
 
 RUN cp /usr/share/doc/activemq/examples/conf/credentials.properties /etc/activemq/instances-available/main/ \
   && ln -s /etc/activemq/instances-available/main /etc/activemq/instances-enabled/main \
