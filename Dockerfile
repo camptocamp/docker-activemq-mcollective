@@ -14,9 +14,8 @@ RUN apt-get update \
   && dpkg -i puppetlabs-release-pc1-${RELEASE}.deb \
   && rm -rf /var/lib/apt/lists/*
 
-ENV PUPPET_AGENT_VERSION 1.3.5-1${RELEASE}
 RUN apt-get update \
-  && apt-get install -y puppet-agent=$PUPPET_AGENT_VERSION \
+  && apt-get install -y puppet-agent \
   && rm -rf /var/lib/apt/lists/*
 
 # Install activemq
