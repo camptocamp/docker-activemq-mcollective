@@ -4,7 +4,7 @@ MAINTAINER mickael.canevet@camptocamp.com
 
 EXPOSE 61613 61614 61616
 
-ENV MCOLLECTIVE_PASSWORD marionette
+ENV STOMP_PASSWORD marionette
 
 # Install puppet-agent
 ENV RELEASE jessie
