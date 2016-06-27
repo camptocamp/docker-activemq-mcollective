@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM ubuntu:xenial
 
 MAINTAINER mickael.canevet@camptocamp.com
 
@@ -7,7 +7,7 @@ EXPOSE 61613 61614 61616
 ENV STOMP_PASSWORD marionette
 
 # Install puppet-agent
-ENV RELEASE jessie
+ENV RELEASE xenial
 RUN apt-get update \
   && apt-get install -y curl locales-all \
   && curl -O http://apt.puppetlabs.com/puppetlabs-release-pc1-${RELEASE}.deb \
