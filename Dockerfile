@@ -49,4 +49,4 @@ CMD ["/usr/bin/java", "-Xms512M", "-Xmx512M", \
   "-Dactivemq.base=/var/lib/activemq/main", \
   "-Dactivemq.conf=/etc/activemq/instances-enabled/main", \
   "-Dactivemq.data=/var/lib/activemq/data", \
-  "-jar", "/usr/share/activemq/bin/run.jar", "start", "xbean:activemq.xml"]
+  "-jar", "/usr/share/activemq/bin/activemq.jar", "start", "xbean:activemq.xml"]
