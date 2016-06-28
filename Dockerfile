@@ -34,14 +34,16 @@ RUN \
     useradd -r -M -d $ACTIVEMQ_HOME activemq && \
     chown activemq:activemq $ACTIVEMQ_HOME -R
 
-USER activemq
-
 COPY activemq.xml $ACTIVEMQ_HOME/conf/activemq.xml
 COPY log4j.properties $ACTIVEMQ_HOME/conf/log4j.properties
+
+RUN chown activemq.activemq $ACTIVEMQ_HOME/conf/activemq.xml $ACTIVEMQ_HOME/conf/log4j.properties
+
+USER activemq
 
 # Configure entrypoint
 COPY /docker-entrypoint.sh /
 COPY /docker-entrypoint.d/* /docker-entrypoint.d/
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD [ "bin/activemq", "console" ]
+CMD [ "/opt/activemq/bin/activemq", "console" ]
