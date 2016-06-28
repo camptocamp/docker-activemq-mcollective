@@ -1,13 +1,20 @@
-FROM ubuntu:xenial
+FROM java:8-jre
 
 MAINTAINER mickael.canevet@camptocamp.com
 
 EXPOSE 61613 61614 61616
 
-ENV STOMP_PASSWORD marionette
+ENV STOMP_PASSWORD=marionette
+ENV ACTIVEMQ_VERSION=5.13.3
+ENV ACTIVEMQ=apache-activemq-$ACTIVEMQ_VERSION
+ENV ACTIVEMQ_HOME=/opt/activemq
+
+RUN apt-get update \
+  && apt-get install locales-all pwgen \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install puppet-agent
-ENV RELEASE xenial
+ENV RELEASE jessie
 RUN apt-get update \
   && apt-get install -y curl locales-all \
   && curl -O http://apt.puppetlabs.com/puppetlabs-release-pc1-${RELEASE}.deb \
@@ -18,35 +25,23 @@ RUN apt-get update \
   && apt-get install -y puppet-agent \
   && rm -rf /var/lib/apt/lists/*
 
-# Install activemq
-RUN apt-get update \
-  && apt-get install -y activemq locales-all pwgen \
-  && rm -rf /var/lib/apt/lists/*
-
-COPY activemq.xml /etc/activemq/instances-available/main/activemq.xml
-RUN chown activemq.activemq /etc/activemq/instances-available/main/activemq.xml \
-  /etc/activemq/instances-available/main
-
-RUN cp /usr/share/doc/activemq/examples/conf/credentials.properties /etc/activemq/instances-available/main/ \
-  && ln -s /etc/activemq/instances-available/main /etc/activemq/instances-enabled/main \
-  && ln -s /var/lib/activemq/main/keystore.jks /etc/activemq/instances-available/main
-
-RUN mkdir /var/run/activemq/ \
-  && chown activemq /var/run/activemq/ /var/lib/activemq/data
+RUN \
+    curl -O http://archive.apache.org/dist/activemq/$ACTIVEMQ_VERSION/$ACTIVEMQ-bin.tar.gz && \
+    mkdir -p /opt && \
+    tar xf $ACTIVEMQ-bin.tar.gz -C /opt/ && \
+    rm $ACTIVEMQ-bin.tar.gz && \
+    mv /opt/$ACTIVEMQ $ACTIVEMQ_HOME && \
+    useradd -r -M -d $ACTIVEMQ_HOME activemq && \
+    chown activemq:activemq $ACTIVEMQ_HOME -R
 
 USER activemq
+
+COPY activemq.xml $ACTIVEMQ_HOME/conf/activemq.xml
+COPY log4j.properties $ACTIVEMQ_HOME/conf/log4j.properties
 
 # Configure entrypoint
 COPY /docker-entrypoint.sh /
 COPY /docker-entrypoint.d/* /docker-entrypoint.d/
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["/usr/bin/java", "-Xms512M", "-Xmx512M", \
-  "-Dorg.apache.activemq.UseDedicatedTaskRunner=true", \
-  "-Dcom.sun.management.jmxremote", \
-  "-Djava.io.tmpdir=/var/lib/activemq/tmp", \
-  "-Dactivemq.classpath=/etc/activemq/instances-enabled/main;", \
-  "-Dactivemq.home=/usr/share/activemq", \
-  "-Dactivemq.base=/var/lib/activemq/main", \
-  "-Dactivemq.conf=/etc/activemq/instances-enabled/main", \
-  "-Dactivemq.data=/var/lib/activemq/data", \
-  "-jar", "/usr/share/activemq/bin/activemq.jar", "start", "xbean:activemq.xml"]
+CMD [ "bin/activemq", "console" ]
