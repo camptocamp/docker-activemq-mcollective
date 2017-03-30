@@ -1,13 +1,12 @@
 FROM java:8-jre
 
-MAINTAINER mickael.canevet@camptocamp.com
-
 EXPOSE 61613 61614 61616
 
-ENV STOMP_PASSWORD=marionette
-ENV ACTIVEMQ_VERSION=5.14.1
+ENV STOMP_PASSWORD=marionette \
+    ACTIVEMQ_VERSION=5.14.3 \
+    ACTIVEMQ_HOME=/opt/activemq
+
 ENV ACTIVEMQ=apache-activemq-$ACTIVEMQ_VERSION
-ENV ACTIVEMQ_HOME=/opt/activemq
 
 RUN apt-get update \
   && apt-get install locales-all pwgen \
