@@ -35,9 +35,9 @@ elif test -n "${AUTOSIGN_PSK}"; then
   cat << EOF > ${confdir}/csr_attributes.yaml
 ---
 custom_attributes:
-  1.2.840.113549.1.9.7: 'hashed;$(CERTNAME=$(puppet config print certname) ruby -e 'require "openssl"; print Digest::SHA256.base64digest(ENV["AUTOSIGN_PSK"] + "/" + ENV["CERTNAME"] + "/puppetdb/production")')'
+  1.2.840.113549.1.9.7: 'hashed;$(CERTNAME=$(puppet config print certname) ruby -e 'require "openssl"; print Digest::SHA256.base64digest(ENV["AUTOSIGN_PSK"] + "/" + ENV["CERTNAME"] + "/activemq/production")')'
 extension_requests:
-  pp_role: puppetdb
+  pp_role: activemq
   pp_environment: production
 EOF
 
