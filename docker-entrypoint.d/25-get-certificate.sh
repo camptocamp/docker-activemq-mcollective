@@ -32,6 +32,7 @@ elif test -n "${AUTOSIGN_PSK}"; then
   confdir=$(puppet config print confdir)
 
   # Generate csr_attributes.yaml
+  mkdir -p "${confdir}"
   cat << EOF > ${confdir}/csr_attributes.yaml
 ---
 custom_attributes:
