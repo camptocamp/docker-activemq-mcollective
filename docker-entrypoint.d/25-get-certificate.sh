@@ -28,7 +28,7 @@ EOF
     rc=$?
   done
 elif test -n "${AUTOSIGN_PSK}"; then
-  PATH=/opt/puppetlabs/bin:$PATH
+  PATH=/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:$PATH
   confdir=$(puppet config print confdir)
 
   # Generate csr_attributes.yaml
